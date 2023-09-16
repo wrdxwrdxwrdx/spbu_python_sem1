@@ -1,7 +1,7 @@
 from math import acos, pi
 
 
-def dot_product(a_vector, b_vector):
+def scalar_product(a_vector, b_vector):
     if len(a_vector) != len(b_vector):
         print('vectors must be of the same dimension')
         return
@@ -14,7 +14,7 @@ def find_length(vector):
 
 
 def find_angle(a_vector, b_vector):
-    return acos(dot_product(a_vector, b_vector) / (find_length(a_vector) * find_length(b_vector))) * 180 / pi
+    return acos(scalar_product(a_vector, b_vector) / (find_length(a_vector) * find_length(b_vector))) * 180 / pi
 
 
 def matrix_transposition(matrix):
@@ -28,20 +28,20 @@ def matrix_sum(a_matrix, b_matrix):
 
 
 def matrix_multipy(a_matrix, b_matrix):
-    if len(a_matrix) != len(b_matrix[0]) or len(a_matrix[0]) != len(b_matrix):
+    if len(a_matrix[0]) != len(b_matrix):
         print("Please enter correct input (matrix_1 width = matrix_2 height, matrix_1 height = matrix_2 width)")
         return
     b_transpose = matrix_transposition(b_matrix)
 
-    return [[dot_product(a_row, bT_row) for bT_row in b_transpose] for a_row in a_matrix]
+    return [[scalar_product(a_row, bT_row) for bT_row in b_transpose] for a_row in a_matrix]
 
 
-def output_dot_product(input_vector):
+def output_scalar_product(input_vector):
     print("\n", *input_vector)
     a_index, b_index = list(
         map(int, input(f"choose indexes of 2 vectors (from 0 to {len(input_vector) - 1}): ").split()))
     print(
-        f"\n{input_vector[a_index]} * {input_vector[b_index]} = {dot_product(input_vector[a_index], input_vector[b_index])}")
+        f"\n{input_vector[a_index]} * {input_vector[b_index]} = {scalar_product(input_vector[a_index], input_vector[b_index])}")
 
 
 def output_find_length(input_vector):
@@ -119,15 +119,15 @@ def vector_operation():
     is_vector = True
     while is_vector:
         print("\nchoose operation: \n"
-              "\t(1) dot product\n"
+              "\t(1) scalar product\n"
               "\t(2) find length\n"
               "\t(3) find angle")
         answer = int(input("your choice: "))
 
-        # Dot product
+        # scalar product
 
         if answer == 1:
-            output_dot_product(input_vector)
+            output_scalar_product(input_vector)
 
         # Length
 
