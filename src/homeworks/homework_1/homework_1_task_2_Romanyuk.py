@@ -31,11 +31,9 @@ def matrix_multipy(a_matrix, b_matrix):
     if len(a_matrix) != len(b_matrix[0]) or len(a_matrix[0]) != len(b_matrix):
         print("Please enter correct input (matrix_1 width = matrix_2 height, matrix_1 height = matrix_2 width)")
         return
-    a_width, a_height = len(a_matrix[0]), len(a_matrix)
-    b_width, b_height = len(b_matrix[0]), len(b_matrix)
+    b_transpose = matrix_transposition(b_matrix)
 
-    return [[sum([a_matrix[y_a][x_a] * b_matrix[x_a][x_b] for x_a in range(a_width)]) for x_b in range(b_width)] for y_a
-            in range(a_height)]
+    return [[dot_product(a_row, bT_row) for bT_row in b_transpose] for a_row in a_matrix]
 
 
 def output_dot_product(input_vector):
@@ -115,6 +113,86 @@ def output_matrix_multipy(input_matrix):
         show_matrix(matrix_multipy(input_matrix[a_index], input_matrix[b_index]))
 
 
+def vector_operation():
+    # Vector input
+    input_vector = enter_vector()
+    is_vector = True
+    while is_vector:
+        print("\nchoose operation: \n"
+              "\t(1) dot product\n"
+              "\t(2) find length\n"
+              "\t(3) find angle")
+        answer = int(input("your choice: "))
+
+        # Dot product
+
+        if answer == 1:
+            output_dot_product(input_vector)
+
+        # Length
+
+        elif answer == 2:
+            output_find_length(input_vector)
+
+        # Angle
+
+        elif answer == 3:
+            output_find_angle(input_vector)
+
+        # Error
+
+        else:
+            print("error")
+
+        user_answer = int(input("\n(1) stop, (2) change object or (3) continue: "))
+        if user_answer == 1:
+            is_vector = False
+            return False
+        elif user_answer == 2:
+            is_vector = False
+            return True
+
+
+def matrix_operation():
+    matrix_count = int(input("\nenter number of matrices: "))
+    print(f"\nenter rows x0 x1 .. xn. To end the entry, write 'stop'\n")
+
+    # Matrix input
+    input_matrix = enter_matrix(matrix_count)
+    is_matrix = True
+    while is_matrix:
+        print("\nchoose operation: \n"
+              "\t(1) transposition\n"
+              "\t(2) addition\n"
+              "\t(3) multiplication")
+        answer = int(input("your choice: "))
+
+        # Transposition
+
+        if answer == 1:
+            output_matrix_transposition(input_matrix)
+
+        # Addition
+
+        elif answer == 2:
+            output_matrix_sum(input_matrix)
+
+        # Multiplication
+
+        elif answer == 3:
+            output_matrix_multipy(input_matrix)
+
+        else:
+            print("error")
+
+        user_answer = int(input("\n(1) stop, (2) change object or (3) continue: "))
+        if user_answer == 1:
+            return False
+        elif user_answer == 2:
+            is_matrix = False
+            return True
+
+
 if __name__ == "__main__":
     is_running = True
 
@@ -126,81 +204,8 @@ if __name__ == "__main__":
 
         # Vectors
         if answer == 1:
-
-            # Vector input
-            input_vector = enter_vector()
-            is_vector = True
-            while is_vector:
-                print("\nchoose operation: \n"
-                      "\t(1) dot product\n"
-                      "\t(2) find length\n"
-                      "\t(3) find angle")
-                answer = int(input("your choice: "))
-
-                # Dot product
-
-                if answer == 1:
-                    output_dot_product(input_vector)
-
-                # Length
-
-                elif answer == 2:
-                    output_find_length(input_vector)
-
-                # Angle
-
-                elif answer == 3:
-                    output_find_angle(input_vector)
-
-                # Error
-
-                else:
-                    print("error")
-
-                user_answer = int(input("\n(1) stop, (2) change object or (3) continue: "))
-                if user_answer == 1:
-                    is_vector = False
-                    is_running = False
-                elif user_answer == 2:
-                    is_vector = False
+            is_running = vector_operation()
 
         # Matrix
-
         elif answer == 2:
-            matrix_count = int(input("\nenter number of matrices: "))
-            print(f"\nenter rows x0 x1 .. xn. To end the entry, write 'stop'\n")
-
-            # Matrix input
-            input_matrix = enter_matrix(matrix_count)
-            is_matrix = True
-            while is_matrix:
-                print("\nchoose operation: \n"
-                      "\t(1) transposition\n"
-                      "\t(2) addition\n"
-                      "\t(3) multiplication")
-                answer = int(input("your choice: "))
-
-                # Transposition
-
-                if answer == 1:
-                    output_matrix_transposition(input_matrix)
-
-                # Addition
-
-                elif answer == 2:
-                    output_matrix_sum(input_matrix)
-
-                # Multiplication
-
-                elif answer == 3:
-                    output_matrix_multipy(input_matrix)
-
-                else:
-                    print("error")
-
-                user_answer = int(input("\n(1) stop, (2) change object or (3) continue: "))
-                if user_answer == 1:
-                    is_matrix = False
-                    is_running = False
-                elif user_answer == 2:
-                    is_matrix = False
+            is_running = matrix_operation()

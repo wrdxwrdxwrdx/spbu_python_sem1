@@ -2,7 +2,7 @@ from sys import argv
 from os.path import exists
 
 
-def wc(prefix, file_name):
+def wc_read_file(file_name):
     line_counter = 0
     word_counter = 0
     char_counter = 0
@@ -18,6 +18,11 @@ def wc(prefix, file_name):
                 char_counter += 1
                 if char == '\n':
                     line_counter += 1
+    return (line_counter, word_counter, char_counter, byte_counter)
+
+
+def wc(prefix, file_name):
+    line_counter, word_counter, char_counter, byte_counter = wc_read_file(file_name)
 
     if prefix == '-l':
         print(f'{line_counter} {file_name}')
@@ -33,49 +38,66 @@ def wc(prefix, file_name):
         print('ошибка в написании параметра')
 
 
-def head(prefix, file_name, line_number):
+def head_reading_file_lines(file_name, line_number):
     with open(file_name, 'r') as file:
-        if prefix == '-n':
-            for _ in range(line_number):
-                print(file.readline())
+        for _ in range(line_number):
+            print(file.readline())
 
-        elif prefix == '-c':
+
+def head_reading_file_bytes(file_name, line_number):
+    with open(file_name, 'r') as file:
+        line = file.readline()
+
+        while line_number >= len(line.encode("utf-8")):
+            print(line.replace('\n', ''))
+            line_number -= len(line.encode("utf-8"))
             line = file.readline()
 
-            while line_number >= len(line.encode("utf-8")):
-                print(line.replace('\n', ''))
-                line_number -= len(line.encode("utf-8"))
-                line = file.readline()
+        line = line.encode('utf-8')[:line_number]
+        print(line.decode('utf-8'))
 
-            line = line.encode('utf-8')[:line_number]
-            print(line.decode('utf-8'))
+
+def head(prefix, file_name, line_number):
+    if prefix == '-n':
+        head_reading_file_lines(file_name, line_number)
+
+    elif prefix == '-c':
+        head_reading_file_bytes(file_name, line_number)
+
+
+def tail_reading_file_bytes(file_name, line_number):
+    with open(file_name, 'r') as file:
+        file_lines = file.readlines()
+        output_lines = []
+        line = file_lines.pop(-1)
+        while line_number >= len(line.encode('utf-8')):
+            line_number -= len(line.encode('utf-8'))
+            output_lines.append(line)
+            line = file_lines.pop(-1)
+
+        output_lines.append(line.encode('utf-8')[len(line.encode('utf-8')) - line_number:].decode('utf-8'))
+
+        for lines in output_lines[::-1]:
+            print(lines.replace('\n', ''))
+
+
+def tail_reading_file_lines(file_name, line_number):
+    with open(file_name, 'r') as file:
+        file_lines = file.readlines()
+        for i in range(len(file_lines) - line_number, len(file_lines)):
+            print(file_lines[i].strip())
 
 
 def tail(prefix, file_name, line_number):
-    with open(file_name, 'r') as file:
+    # print lines
 
-        # print lines
+    if prefix == '-n':
+        tail_reading_file_lines(file_name, line_number)
 
-        if prefix == '-n':
-            file_lines = file.readlines()
-            for i in range(len(file_lines) - line_number, len(file_lines)):
-                print(file_lines[i].strip())
+    # print bytes
 
-        # print bytes
-
-        elif prefix == '-c':
-            file_lines = file.readlines()
-            output_lines = []
-            line = file_lines.pop(-1)
-            while line_number >= len(line.encode('utf-8')):
-                line_number -= len(line.encode('utf-8'))
-                output_lines.append(line)
-                line = file_lines.pop(-1)
-
-            output_lines.append(line.encode('utf-8')[len(line.encode('utf-8')) - line_number:].decode('utf-8'))
-
-            for lines in output_lines[::-1]:
-                print(lines.replace('\n', ''))
+    elif prefix == '-c':
+        tail_reading_file_bytes(file_name, line_number)
 
 
 if __name__ == "__main__":
@@ -97,7 +119,6 @@ if __name__ == "__main__":
         function = None
         is_running = False
         print("Введите корректную команду")
-
 
     if is_running and exists(file_name):
         if function == "wc":
