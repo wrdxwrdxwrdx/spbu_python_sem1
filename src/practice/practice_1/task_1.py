@@ -9,7 +9,9 @@ def incomplete_quotient(a, b):
     return answer
 
 
-if __name__ == '__main__':
-    input_info = input('Введите числа a и b через пробел: ')
+if __name__ == "__main__":
+    input_info = input("Введите числа a и b через пробел: ")
     a, b = map(int, input_info.split())
-    print(f'результат неполного частного от деления {a} на {b}: {incomplete_quotient(a, b)}')
+    print(
+        f"результат неполного частного от деления {a} на {b}: {incomplete_quotient(a, b)}"
+    )
