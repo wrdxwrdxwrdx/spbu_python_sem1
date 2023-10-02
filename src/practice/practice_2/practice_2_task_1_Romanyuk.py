@@ -15,11 +15,11 @@ def get_fractions(max_denominator):
 def output_fractions(array):
     answer = ""
     for fraction in array:
-        answer += f'{fraction[0]}/{fraction[1]}, '
+        answer += f"{fraction[0]}/{fraction[1]}, "
     return answer[:-2]
 
 
-if __name__ == '__main__':
-    max_denominator = int(input('Напишите максимальный знаменатель: '))
+if __name__ == "__main__":
+    max_denominator = int(input("Напишите максимальный знаменатель: "))
     all_fractions = get_fractions(max_denominator)
     print(output_fractions(all_fractions))
