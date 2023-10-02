@@ -8,7 +8,7 @@ def wc_read_file(file_name):
     char_counter = 0
     byte_counter = 0
 
-    with open(file_name, 'r') as file:
+    with open(file_name, "r") as file:
         for line in file.readlines():
             word_counter += len(line.split())
             encoded_bytes = line.encode("utf-8")
@@ -16,7 +16,7 @@ def wc_read_file(file_name):
 
             for char in line:
                 char_counter += 1
-                if char == '\n':
+                if char == "\n":
                     line_counter += 1
     return (line_counter, word_counter, char_counter, byte_counter)
 
@@ -24,65 +24,69 @@ def wc_read_file(file_name):
 def wc(prefix, file_name):
     line_counter, word_counter, char_counter, byte_counter = wc_read_file(file_name)
 
-    if prefix == '-l':
-        print(f'{line_counter} {file_name}')
-    elif prefix == '-m':
-        print(f'{char_counter} {file_name}')
-    elif prefix == '-c':
-        print(f'{byte_counter} {file_name}')
-    elif prefix == '-w':
-        print(f'{word_counter} {file_name}')
-    elif prefix == '-all':
-        print(f'{line_counter} {word_counter} {byte_counter} {file_name}')
+    if prefix == "-l":
+        print(f"{line_counter} {file_name}")
+    elif prefix == "-m":
+        print(f"{char_counter} {file_name}")
+    elif prefix == "-c":
+        print(f"{byte_counter} {file_name}")
+    elif prefix == "-w":
+        print(f"{word_counter} {file_name}")
+    elif prefix == "-all":
+        print(f"{line_counter} {word_counter} {byte_counter} {file_name}")
     else:
-        print('ошибка в написании параметра')
+        print("ошибка в написании параметра")
 
 
 def head_reading_file_lines(file_name, line_number):
-    with open(file_name, 'r') as file:
+    with open(file_name, "r") as file:
         for _ in range(line_number):
             print(file.readline())
 
 
 def head_reading_file_bytes(file_name, line_number):
-    with open(file_name, 'r') as file:
+    with open(file_name, "r") as file:
         line = file.readline()
 
         while line_number >= len(line.encode("utf-8")):
-            print(line.replace('\n', ''))
+            print(line.replace("\n", ""))
             line_number -= len(line.encode("utf-8"))
             line = file.readline()
 
-        line = line.encode('utf-8')[:line_number]
-        print(line.decode('utf-8'))
+        line = line.encode("utf-8")[:line_number]
+        print(line.decode("utf-8"))
 
 
 def head(prefix, file_name, line_number):
-    if prefix == '-n':
+    if prefix == "-n":
         head_reading_file_lines(file_name, line_number)
 
-    elif prefix == '-c':
+    elif prefix == "-c":
         head_reading_file_bytes(file_name, line_number)
 
 
 def tail_reading_file_bytes(file_name, line_number):
-    with open(file_name, 'r') as file:
+    with open(file_name, "r") as file:
         file_lines = file.readlines()
         output_lines = []
         line = file_lines.pop(-1)
-        while line_number >= len(line.encode('utf-8')):
-            line_number -= len(line.encode('utf-8'))
+        while line_number >= len(line.encode("utf-8")):
+            line_number -= len(line.encode("utf-8"))
             output_lines.append(line)
             line = file_lines.pop(-1)
 
-        output_lines.append(line.encode('utf-8')[len(line.encode('utf-8')) - line_number:].decode('utf-8'))
+        output_lines.append(
+            line.encode("utf-8")[len(line.encode("utf-8")) - line_number :].decode(
+                "utf-8"
+            )
+        )
 
         for lines in output_lines[::-1]:
-            print(lines.replace('\n', ''))
+            print(lines.replace("\n", ""))
 
 
 def tail_reading_file_lines(file_name, line_number):
-    with open(file_name, 'r') as file:
+    with open(file_name, "r") as file:
         file_lines = file.readlines()
         for i in range(len(file_lines) - line_number, len(file_lines)):
             print(file_lines[i].strip())
@@ -91,18 +95,18 @@ def tail_reading_file_lines(file_name, line_number):
 def tail(prefix, file_name, line_number):
     # print lines
 
-    if prefix == '-n':
+    if prefix == "-n":
         tail_reading_file_lines(file_name, line_number)
 
     # print bytes
 
-    elif prefix == '-c':
+    elif prefix == "-c":
         tail_reading_file_bytes(file_name, line_number)
 
 
 if __name__ == "__main__":
     line_number = 10
-    prefix = '-all'
+    prefix = "-all"
 
     is_running = True
 
@@ -123,11 +127,11 @@ if __name__ == "__main__":
     if is_running and exists(file_name):
         if function == "wc":
             wc(prefix, file_name)
-        elif function == 'head':
+        elif function == "head":
             head(prefix, file_name, line_number)
-        elif function == 'tail':
+        elif function == "tail":
             tail(prefix, file_name, line_number)
         else:
-            print('Введена неверныая команда')
+            print("Введена неверныая команда")
     elif is_running:
-        print(f'{file_name} Нет такого файла')
+        print(f"{file_name} Нет такого файла")

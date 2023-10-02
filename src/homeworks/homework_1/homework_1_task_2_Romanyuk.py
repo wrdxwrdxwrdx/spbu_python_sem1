@@ -3,18 +3,25 @@ from math import acos, pi
 
 def scalar_product(a_vector, b_vector):
     if len(a_vector) != len(b_vector):
-        print('vectors must be of the same dimension')
+        print("vectors must be of the same dimension")
         return
     else:
         return sum([a_vector[i] * b_vector[i] for i in range(len(a_vector))])
 
 
 def find_length(vector):
-    return (sum([i ** 2 for i in vector])) ** 0.5
+    return (sum([i**2 for i in vector])) ** 0.5
 
 
 def find_angle(a_vector, b_vector):
-    return acos(scalar_product(a_vector, b_vector) / (find_length(a_vector) * find_length(b_vector))) * 180 / pi
+    return (
+        acos(
+            scalar_product(a_vector, b_vector)
+            / (find_length(a_vector) * find_length(b_vector))
+        )
+        * 180
+        / pi
+    )
 
 
 def matrix_transposition(matrix):
@@ -24,45 +31,71 @@ def matrix_transposition(matrix):
 
 def matrix_sum(a_matrix, b_matrix):
     width, height = len(a_matrix[0]), len(a_matrix)
-    return [[a_matrix[y][x] + b_matrix[y][x] for x in range(width)] for y in range(height)]
+    return [
+        [a_matrix[y][x] + b_matrix[y][x] for x in range(width)] for y in range(height)
+    ]
 
 
 def matrix_multipy(a_matrix, b_matrix):
     if len(a_matrix[0]) != len(b_matrix):
-        print("Please enter correct input (matrix_1 width = matrix_2 height, matrix_1 height = matrix_2 width)")
+        print(
+            "Please enter correct input (matrix_1 width = matrix_2 height, matrix_1 height = matrix_2 width)"
+        )
         return
     b_transpose = matrix_transposition(b_matrix)
 
-    return [[scalar_product(a_row, bT_row) for bT_row in b_transpose] for a_row in a_matrix]
+    return [
+        [scalar_product(a_row, bT_row) for bT_row in b_transpose] for a_row in a_matrix
+    ]
 
 
 def output_scalar_product(input_vector):
     print("\n", *input_vector)
     a_index, b_index = list(
-        map(int, input(f"choose indexes of 2 vectors (from 0 to {len(input_vector) - 1}): ").split()))
+        map(
+            int,
+            input(
+                f"choose indexes of 2 vectors (from 0 to {len(input_vector) - 1}): "
+            ).split(),
+        )
+    )
     print(
-        f"\n{input_vector[a_index]} * {input_vector[b_index]} = {scalar_product(input_vector[a_index], input_vector[b_index])}")
+        f"\n{input_vector[a_index]} * {input_vector[b_index]} = {scalar_product(input_vector[a_index], input_vector[b_index])}"
+    )
 
 
 def output_find_length(input_vector):
     print("\n", *input_vector)
-    a_index = int(input(f"choose index of 1 vector (from 0 to {len(input_vector) - 1}): "))
-    print(f"\nlength of {input_vector[a_index]} is {find_length(input_vector[a_index])}")
+    a_index = int(
+        input(f"choose index of 1 vector (from 0 to {len(input_vector) - 1}): ")
+    )
+    print(
+        f"\nlength of {input_vector[a_index]} is {find_length(input_vector[a_index])}"
+    )
 
 
 def output_find_angle(input_vector):
     print("\n", *input_vector)
     a_index, b_index = list(
-        map(int, input(f"choose indexes of 2 vectors (from 0 to {len(input_vector) - 1}): ").split()))
+        map(
+            int,
+            input(
+                f"choose indexes of 2 vectors (from 0 to {len(input_vector) - 1}): "
+            ).split(),
+        )
+    )
     print(
-        f"\nangle between {input_vector[a_index]} and {input_vector[b_index]} equals to {find_angle(input_vector[a_index], input_vector[b_index])} degrees")
+        f"\nangle between {input_vector[a_index]} and {input_vector[b_index]} equals to {find_angle(input_vector[a_index], input_vector[b_index])} degrees"
+    )
 
 
 def enter_vector():
     print("\nplease enter your vectors: ")
-    input_vector = input('type (x0,y0,z0..) (x1,y1,z1..) ... (xn,yn,zn..): ')
+    input_vector = input("type (x0,y0,z0..) (x1,y1,z1..) ... (xn,yn,zn..): ")
     input_vector = input_vector.split()
-    input_vector = [list(map(int, element[1:-1].split(','))) for element in input_vector]
+    input_vector = [
+        list(map(int, element[1:-1].split(","))) for element in input_vector
+    ]
     return input_vector
 
 
@@ -86,18 +119,27 @@ def enter_matrix(matrix_count):
 
 
 def output_matrix_transposition(input_matrix):
-    print('\n', *input_matrix)
-    a_index = int(input(f"choose index of 1 matrix (from 0 to {len(input_matrix) - 1}): "))
+    print("\n", *input_matrix)
+    a_index = int(
+        input(f"choose index of 1 matrix (from 0 to {len(input_matrix) - 1}): ")
+    )
     print(f"\ntransposed matrix:")
     show_matrix(matrix_transposition(input_matrix[a_index]))
 
 
 def output_matrix_sum(input_matrix):
-    print('\n', *input_matrix)
+    print("\n", *input_matrix)
     a_index, b_index = list(
-        map(int, input(f"choose indexes of 2 matrices (from 0 to {len(input_matrix) - 1}): ").split()))
-    if len(input_matrix[a_index]) != len(input_matrix[b_index]) or len(input_matrix[a_index][0]) != len(
-            input_matrix[b_index][0]):
+        map(
+            int,
+            input(
+                f"choose indexes of 2 matrices (from 0 to {len(input_matrix) - 1}): "
+            ).split(),
+        )
+    )
+    if len(input_matrix[a_index]) != len(input_matrix[b_index]) or len(
+        input_matrix[a_index][0]
+    ) != len(input_matrix[b_index][0]):
         print("\nPlease enter correct input (matrix sizes should be equal)")
     else:
         print("\nsum of two matrices:")
@@ -105,9 +147,15 @@ def output_matrix_sum(input_matrix):
 
 
 def output_matrix_multipy(input_matrix):
-    print('\n', *input_matrix)
+    print("\n", *input_matrix)
     a_index, b_index = list(
-        map(int, input(f"choose indexes of 2 matrices (from 0 to {len(input_matrix) - 1}): ").split()))
+        map(
+            int,
+            input(
+                f"choose indexes of 2 matrices (from 0 to {len(input_matrix) - 1}): "
+            ).split(),
+        )
+    )
     print("\nmultiplication of two matrices:")
     if matrix_multipy(input_matrix[a_index], input_matrix[b_index]):
         show_matrix(matrix_multipy(input_matrix[a_index], input_matrix[b_index]))
@@ -118,10 +166,12 @@ def vector_operation():
     input_vector = enter_vector()
     is_vector = True
     while is_vector:
-        print("\nchoose operation: \n"
-              "\t(1) scalar product\n"
-              "\t(2) find length\n"
-              "\t(3) find angle")
+        print(
+            "\nchoose operation: \n"
+            "\t(1) scalar product\n"
+            "\t(2) find length\n"
+            "\t(3) find angle"
+        )
         answer = int(input("your choice: "))
 
         # scalar product
@@ -161,10 +211,12 @@ def matrix_operation():
     input_matrix = enter_matrix(matrix_count)
     is_matrix = True
     while is_matrix:
-        print("\nchoose operation: \n"
-              "\t(1) transposition\n"
-              "\t(2) addition\n"
-              "\t(3) multiplication")
+        print(
+            "\nchoose operation: \n"
+            "\t(1) transposition\n"
+            "\t(2) addition\n"
+            "\t(3) multiplication"
+        )
         answer = int(input("your choice: "))
 
         # Transposition
@@ -197,9 +249,7 @@ if __name__ == "__main__":
     is_running = True
 
     while is_running:
-        print("\nchoose object: \n"
-              "\t(1) vector\n"
-              "\t(2) matrix")
+        print("\nchoose object: \n" "\t(1) vector\n" "\t(2) matrix")
         answer = int(input("your choice: "))
 
         # Vectors
