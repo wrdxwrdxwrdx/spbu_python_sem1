@@ -7,7 +7,7 @@ class ListNode:
         self.next = None
 
     def __str__(self):
-        return f'{self.val}{self.next}'
+        return f"{self.val}{self.next}"
 
     def start_with(self, start):
         head = self
@@ -129,25 +129,31 @@ def replace(template, fragment, dna):
     return head.next
 
 
-if __name__ == '__main__':
-    read_file_name = input('file with commands [src].txt: ')
-    write_file_name = input('output file [dst].txt: ')
+if __name__ == "__main__":
+    read_file_name = input("file with commands [src].txt: ")
+    write_file_name = input("output file [dst].txt: ")
 
     if exists(read_file_name):
-        with open(write_file_name, 'w') as write_file:
-            with open(read_file_name, 'r') as read_file:
+        with open(write_file_name, "w") as write_file:
+            with open(read_file_name, "r") as read_file:
                 length_dna = int(read_file.readline())
                 dna = string_to_node(read_file.readline().strip())
                 command_number = int(read_file.readline())
                 for i in range(command_number):
                     line = read_file.readline().split()
                     if line[0] == "DELETE":
-                        dna = delete(string_to_node(line[1]), string_to_node(line[2]), dna)
+                        dna = delete(
+                            string_to_node(line[1]), string_to_node(line[2]), dna
+                        )
                     elif line[0] == "INSERT":
-                        dna = insert(string_to_node(line[1]), string_to_node(line[2]), dna)
+                        dna = insert(
+                            string_to_node(line[1]), string_to_node(line[2]), dna
+                        )
                     elif line[0] == "REPLACE":
-                        dna = replace(string_to_node(line[1]), string_to_node(line[2]), dna)
-                    write_file.write(str(dna)[:-4] + '\n')
-        print(f'{write_file_name} done')
+                        dna = replace(
+                            string_to_node(line[1]), string_to_node(line[2]), dna
+                        )
+                    write_file.write(str(dna)[:-4] + "\n")
+        print(f"{write_file_name} done")
     else:
-        print(f'{read_file_name} does not exist')
+        print(f"{read_file_name} does not exist")
