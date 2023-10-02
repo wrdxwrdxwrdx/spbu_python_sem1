@@ -26,10 +26,10 @@ def uncurry_explicit(function, arity):
             return
         elif len(args) == 0:
             return function()
-        f = function(args[0])
+        function_return = function(args[0])
 
         for i in range(1, len(args)):
-            f = f(args[i])
+            function_return = function_return(args[i])
 
     return main_uncurry_function
 
