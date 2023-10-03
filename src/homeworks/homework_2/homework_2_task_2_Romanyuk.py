@@ -11,7 +11,7 @@ def create_word_list(file_name):
                 if word in word_counter.keys():
                     word_counter[word] += 1
                 else:
-                    word_counter.update({word: 1})
+                    word_counter[word] = 1
 
     return word_counter
 
@@ -19,8 +19,7 @@ def create_word_list(file_name):
 def write_in_file(write_file, word_counter):
     with open(write_file, "w") as file:
         writer = csv.writer(file)
-        for word in word_counter:
-            writer.writerow([word, word_counter[word]])
+        writer.writerows([word, word_counter[word]] for word in word_counter)
 
 
 if __name__ == "__main__":
