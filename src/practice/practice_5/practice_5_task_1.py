@@ -22,12 +22,17 @@ def push(stack, value):
 
 
 def pop(stack):
-    stack.head = stack.head.next
-    stack.size -= 1
+    if empty(stack):
+        stack.head = stack.head.next
+        stack.size -= 1
+    else:
+        return None
 
 
 def top(stack):
-    return stack.head.value
+    if size(stack):
+        return stack.head.value
+    return None
 
 
 def size(stack):
