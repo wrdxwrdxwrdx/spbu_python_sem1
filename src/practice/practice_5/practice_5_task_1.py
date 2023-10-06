@@ -7,12 +7,12 @@ StackElement = namedtuple("StackElement", ["value", "next"])
 
 @dataclass
 class Stack:
-    size: int
+    size: int = 0
     head: StackElement = None
 
 
 def create_stack():
-    stack = Stack(size=0)
+    stack = Stack
     return stack
 
 
@@ -25,14 +25,16 @@ def pop(stack):
     if not empty(stack):
         stack.head = stack.head.next
         stack.size -= 1
+        return True
     else:
-        return None
+        return False
 
 
 def top(stack):
     if not empty(stack):
         return stack.head.value
-    return None
+    else:
+        return False
 
 
 def size(stack):
@@ -40,11 +42,15 @@ def size(stack):
 
 
 def empty(stack):
-    return not bool(stack.size)
+    if size(stack) == 0:
+        return True
+    return False
 
 
 def main():
     new_stack = create_stack()
+    pop(new_stack)
+    top(new_stack)
     push(new_stack, 3)
     push(new_stack, 2)
     push(new_stack, 1)
