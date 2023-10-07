@@ -12,8 +12,7 @@ class Stack:
 
 
 def create_stack():
-    stack = Stack
-    return stack
+    return Stack()
 
 
 def push(stack, value):
@@ -42,9 +41,7 @@ def size(stack):
 
 
 def empty(stack):
-    if size(stack) == 0:
-        return True
-    return False
+    return size(stack) == 0
 
 
 def main():
