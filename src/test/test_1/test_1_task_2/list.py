@@ -14,16 +14,6 @@ class List:
     head: Node = Node()
 
 
-def list_print(list):
-    ls_copy = list.head
-    arr = []
-    while ls_copy.next:
-        arr.append(ls_copy.value)
-        ls_copy = ls_copy.next
-    arr.append(ls_copy.value)
-    print(arr)
-
-
 def create():
     return List()
 
