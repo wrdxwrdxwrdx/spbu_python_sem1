@@ -11,4 +11,3 @@ if __name__ == "__main__":
     print(retrieve(ls, 3))
     delete(ls, 0)
     print(head(ls))
-

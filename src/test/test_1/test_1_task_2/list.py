@@ -39,7 +39,7 @@ def insert(list, value, index):
         list.head.value = value
     else:
         list_copy = list.head
-        for i in range(index-1):
+        for i in range(index - 1):
             list_copy = list_copy.next
         tail = list_copy.next
         list_copy.next = Node(value, tail)
@@ -75,7 +75,7 @@ def delete(list, index):
         list.head = list.head.next
     else:
         list_copy = list.head
-        for i in range(index-1):
+        for i in range(index - 1):
             list_copy = list_copy.next
         tail = list_copy.next
         tail = tail.next
