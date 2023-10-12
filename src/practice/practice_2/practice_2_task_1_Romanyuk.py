@@ -1,3 +1,6 @@
+from math import gcd
+
+
 def get_fractions(max_denominator):
     answer = []
     for denominator in range(2, max_denominator + 1):
@@ -5,7 +8,7 @@ def get_fractions(max_denominator):
             if numerator == 1:
                 answer.append((numerator, denominator))
 
-            elif denominator % numerator != 0:
+            elif gcd(denominator, numerator) == 1:
                 answer.append((numerator, denominator))
 
     answer.sort(key=lambda fraction: fraction[0] / fraction[1])
