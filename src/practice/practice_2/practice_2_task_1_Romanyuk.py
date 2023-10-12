@@ -1,12 +1,4 @@
-def gcf(a, b):
-    a, b = sorted([a, b])
-    if a == 1 or b == 1:
-        return 1
-    elif a == 0:
-        return b
-    else:
-        return gcf(a, b % a)
-
+from math import gcd
 
 def get_fractions(max_denominator):
     answer = []
@@ -15,7 +7,7 @@ def get_fractions(max_denominator):
             if numerator == 1:
                 answer.append((numerator, denominator))
 
-            elif gcf(denominator, numerator) == 1:
+            elif gcd(denominator, numerator) == 1:
                 answer.append((numerator, denominator))
 
     answer.sort(key=lambda fraction: fraction[0] / fraction[1])
