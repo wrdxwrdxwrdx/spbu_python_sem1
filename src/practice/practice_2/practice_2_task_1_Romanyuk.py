@@ -1,5 +1,6 @@
 from math import gcd
 
+
 def get_fractions(max_denominator):
     answer = []
     for denominator in range(2, max_denominator + 1):
