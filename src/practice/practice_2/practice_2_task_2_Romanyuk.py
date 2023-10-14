@@ -1,3 +1,6 @@
+import random
+
+
 def compare_numbers(number, attempt):
     bull = 0  # точные места
     cow = 0  # не точные места
@@ -11,83 +14,49 @@ def compare_numbers(number, attempt):
     return (cow, bull)
 
 
-def input_names():
-    player_1_name = input("Введите имя первого игрока: ")
-    player_2_name = input("Введите имя второго игрока: ")
-    return player_1_name, player_2_name
-
-
-def skip_line(line_number):
-    for _ in range(line_number):
-        print("\n")
-
-
-def player_move(player_name, number):
-    skip_line(20)
-
+def player_move(number):
     bull = 0
     cow = 0
-    points = 1
+    moves = 1
 
     while bull != 4:
         attempt = input(
-            f"{points}) {player_name} пожалуйста введите 4 значное число без повторений цифр: "
+            f"{moves}) пожалуйста введите 4 значное число без повторений цифр: "
         )
         if not is_number_available(attempt):
             print("Неверное число")
             continue
-        points += 1
+        moves += 1
 
         cow, bull = compare_numbers(number, attempt)
         print(f"{cow} коровы, {bull} быков\n")
-    points -= 1
-    print(f"{player_name} угадал число за {points} ходов")
-    return points
+    moves -= 1
+    print(f"Вы угадали число за {moves} ходов")
+    return moves
 
 
 def is_number_available(number):
-    if not (len(number) == 4 and len(set(number)) == 4):
-        return False
-    return True
+    return len(number) == 4 and len(set(number)) == 4 and number[0] != "0"
+
+
+def generate_number(number_length):
+    number_list = list(range(10))
+    while number_list[0] == 0:
+        random.shuffle(number_list)
+    return "".join(map(str, number_list[:number_length]))
+
+
+def main():
+    number = generate_number(4)
+
+    while not (is_number_available(number)):
+        print("Неверное число")
+        player_number = input(
+            f"\nпожалуйста введите 4 значное число без повторений цифр: "
+        )
+
+    player_points = player_move(number)
 
 
 if __name__ == "__main__":
-    print(
-        "Игрок 1 вводит число, после этого игрок 2 его угадывает. Потом наоборот. Побеждает тот, кто угадал число быстрее\n"
-    )
-    player_1_name, player_2_name = input_names()
-
-    player_1_number = input(
-        f"\n{player_1_name} пожалуйста введите 4 значное число без повторений цифр: "
-    )
-    if not is_number_available(player_1_number):
-        while not (is_number_available(player_1_number)):
-            print("Неверное число")
-            player_1_number = input(
-                f"\n{player_1_name} пожалуйста введите 4 значное число без повторений цифр: "
-            )
-
-    player_2_points = player_move(player_2_name, player_1_number)
-
-    player_2_number = input(
-        f"\n{player_2_name} пожалуйста введите 4 значное число без повторений цифр: "
-    )
-    if not is_number_available(player_2_number):
-        while not (is_number_available(player_2_number)):
-            print("Неверное число")
-            player_2_number = input(
-                f"\n{player_2_name} пожалуйста введите 4 значное число без повторений цифр: "
-            )
-
-    player_1_points = player_move(player_1_name, player_2_number)
-
-    if player_1_points < player_2_points:
-        print(
-            f"\n{player_1_name} победил. Он угадал число на {player_2_points - player_1_points} ходов быстрее"
-        )
-    elif player_2_points < player_1_points:
-        print(
-            f"\n{player_2_name} победил. Он угадал число на {player_1_points - player_2_points} ходов быстрее"
-        )
-    else:
-        print("\nНичья")
+    main()
