@@ -1,6 +1,6 @@
 def curry_explict(function, arity):
     if arity < 0:
-        return
+        raise ValueError("введена арность меньше 0")
 
     def main_curry_function(args):
         if len(args) == arity:
@@ -9,8 +9,7 @@ def curry_explict(function, arity):
             try:
                 return function(*args)
             except TypeError:
-                print("введена неверная арность(curry_explict)")
-                return
+                raise ValueError("введена неверная арность(curry_explict)")
 
         return lambda new_argument: main_curry_function([*args, new_argument])
 
@@ -30,28 +29,6 @@ def uncurry_explicit(function, arity):
             return function_return
 
         except TypeError:
-            print("введена неверная арность(uncurry_explicit)")
-            return
+            raise ValueError("введена неверная арность(uncurry_explicit)")
 
     return main_uncurry_function
-
-
-def get_user_input():
-    user_function = eval(input("Введите функцию: "))
-    arity = int(input("Введите арность функции: "))
-    curry_user_function = curry_explict(user_function, arity)
-    uncurry_user_function = uncurry_explicit(curry_user_function, arity)
-    return curry_user_function, uncurry_user_function
-
-
-if __name__ == "__main__":
-    curry_user_function, uncurry_user_function = get_user_input()
-    if curry_user_function:
-        print(
-            "\nкаррированая функция curry_user_function\n"
-            "декаррированая функция uncurry_user_function\n"
-        )
-        while True:
-            eval(input("Введите название функции и ее параметры: "))
-    else:
-        print("Введена арность меньше 0")
