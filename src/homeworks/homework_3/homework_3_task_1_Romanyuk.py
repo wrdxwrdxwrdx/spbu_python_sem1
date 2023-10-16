@@ -1,6 +1,6 @@
 def curry_explict(function, arity):
     if arity < 0:
-        return False
+        return
 
     def main_curry_function(args):
         if len(args) == arity:
@@ -10,26 +10,28 @@ def curry_explict(function, arity):
                 return function(*args)
             except TypeError:
                 print("введена неверная арность(curry_explict)")
+                return
 
-        def curry(new_argument):
-            return main_curry_function([*args, new_argument])
-
-        return curry
+        return lambda new_argument: main_curry_function([*args, new_argument])
 
     return main_curry_function([])
 
 
 def uncurry_explicit(function, arity):
     def main_uncurry_function(*args):
-        if len(args) != arity:
+        try:
+            if len(args) == 0:
+                return function()
+            function_return = function(args[0])
+
+            for i in range(1, len(args)):
+                function_return = function_return(args[i])
+
+            return function_return
+
+        except TypeError:
             print("введена неверная арность(uncurry_explicit)")
             return
-        elif len(args) == 0:
-            return function()
-        function_return = function(args[0])
-
-        for i in range(1, len(args)):
-            function_return = function_return(args[i])
 
     return main_uncurry_function
 
