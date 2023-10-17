@@ -48,7 +48,7 @@ def binary_subtraction(a, b):
 
 
 def arr_to_str(arr):
-    return ''.join(map(str, arr))
+    return "".join(map(str, arr))
 
 
 def invert_number(number):
@@ -70,7 +70,7 @@ def binary_to_denary(number):
         number = number[::-1]
 
     for i in range(len(number)):
-        answer += number[i] * 2 ** i
+        answer += number[i] * 2**i
 
     if minus:
         return -answer
@@ -81,12 +81,18 @@ def main(num_1, num_2):
     num_1_bin, num_2_bin = denary_to_binary(num_1), denary_to_binary(num_2)
     print(f"{num_1} в Двоичной системе исчисления: {arr_to_str(num_1_bin)}")
     print(f"{num_2} в Двоичной системе исчисления: {arr_to_str(num_2_bin)}")
-    print(f"{num_1} + {num_2} в Двоичной системе исчисления: {arr_to_str(binary_addition(num_1_bin, num_2_bin))}")
     print(
-        f"{num_1} + {num_2} в Десятичной системе исчисления: {binary_to_denary(binary_addition(num_1_bin, num_2_bin))}")
-    print(f"{num_1} - {num_2} в Двоичной системе исчисления: {arr_to_str(binary_subtraction(num_1_bin, num_2_bin))}")
+        f"{num_1} + {num_2} в Двоичной системе исчисления: {arr_to_str(binary_addition(num_1_bin, num_2_bin))}"
+    )
     print(
-        f"{num_1} - {num_2} в Десятичной системе исчисления: {binary_to_denary(binary_subtraction(num_1_bin, num_2_bin))}")
+        f"{num_1} + {num_2} в Десятичной системе исчисления: {binary_to_denary(binary_addition(num_1_bin, num_2_bin))}"
+    )
+    print(
+        f"{num_1} - {num_2} в Двоичной системе исчисления: {arr_to_str(binary_subtraction(num_1_bin, num_2_bin))}"
+    )
+    print(
+        f"{num_1} - {num_2} в Десятичной системе исчисления: {binary_to_denary(binary_subtraction(num_1_bin, num_2_bin))}"
+    )
 
 
 if __name__ == "__main__":
