@@ -1,31 +1,34 @@
-def curry_explict(function, arity):
-    if arity < 0:
-        raise ValueError("введена арность меньше 0")
+from inspect import signature
+
+
+def curry_explicit(function, arity):
+    if len(signature(function).parameters) != arity:
+        raise ValueError("введена неверная арность(curry_explict)")
 
     def main_curry_function(args):
         if len(args) == arity:
             if arity == 0:
                 return function
-            try:
-                return function(*args)
-            except TypeError:
-                raise ValueError("введена неверная арность(curry_explict)")
+            return function(*args)
 
-        return lambda new_argument: main_curry_function([*args, new_argument])
+        def curry(new_argument):
+            return main_curry_function([*args, new_argument])
+
+        return curry
 
     return main_curry_function([])
 
 
 def uncurry_explicit(function, arity):
     def main_uncurry_function(*args):
-        try:
-            if len(args) == 0:
-                return function()
-            function_return = function(args[0])
+        if len(args) == 0:
+            return function()
 
+        function_return = function(args[0])
+
+        try:
             for i in range(1, len(args)):
                 function_return = function_return(args[i])
-
             return function_return
 
         except TypeError:
