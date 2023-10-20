@@ -1,5 +1,5 @@
 from io import StringIO
-from spbu_python_sem1.src.practice.practice_6.practice_6_task_1 import *
+from src.practice.practice_6.practice_6_task_1 import *
 import pytest
 
 test_quadratic_solver_array = [
