@@ -1,3 +1,7 @@
+INPUT_TEXT = "Введите a, b, c для уравнения ax^2 + bx + c = 0 или 0, k, b для уравнения kx + b = 0: "
+BAD_INPUT = "Введено не 3 параметра"
+
+
 def is_float_number(num):
     try:
         float(num)
@@ -7,7 +11,9 @@ def is_float_number(num):
 
 
 def linear_solver(k, b):
-    return [-b / k]
+    if k == 0:
+        raise ValueError("Нет решений, нельзя делить на 0")
+    return (-b / k,)
 
 
 def quadratic_solver(a, b, c):
@@ -16,18 +22,17 @@ def quadratic_solver(a, b, c):
     if dis < 0:
         raise ValueError("Дискриминант меньше 0")
     elif dis == 0:
-        return [-b / (2 * a)]
+        return (-b / (2 * a),)
     else:
         x1 = (-b + dis**0.5) / (2 * a)
         x2 = (-b - dis**0.5) / (2 * a)
-        return list(sorted([x1, x2]))
+        return (x1, x2)
 
 
 def solve(a, b, c):
     if a == 0 and b == 0:
         if c == 0:
-            print("x любое число")
-            return []
+            raise ValueError("все коэффициенты равны 0, x любое число")
         else:
             raise ValueError("нет решений")
 
@@ -39,30 +44,27 @@ def solve(a, b, c):
 
 def string_to_float(line):
     if all(is_float_number(i) for i in line.split()):
-        return list(map(float, line.split()))
+        return tuple(map(float, line.split()))
     else:
         raise ValueError("Один из коэффициентов не число")
 
 
 def check_user_input(line, number_of_elements):
-    if len(line.split()) == number_of_elements:
-        return True
-    return False
-
-
-def show_answer(arr):
-    print(" ".join(map(str, arr)))
+    return len(line.split()) == number_of_elements
 
 
 def main():
-    user_input = input("Введите a, b, c для уравнения ax^2 + bx + c = 0: ")
+    user_input = input(INPUT_TEXT)
 
     if check_user_input(user_input, 3):
         answer_array = solve(*string_to_float(user_input))
-        show_answer(answer_array)
+        print(*answer_array, sep=" ")
     else:
-        raise ValueError("Введено не 3 параметра")
+        raise ValueError(BAD_INPUT)
 
 
 if __name__ == "__main__":
-    main()
+    try:
+        main()
+    except Exception as error:
+        print(error)
