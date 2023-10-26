@@ -50,21 +50,20 @@ def string_to_float(line):
 
 
 def check_user_input(line, number_of_elements):
-    return len(line.split()) == number_of_elements
+    if len(line.split()) != number_of_elements:
+        raise ValueError(BAD_INPUT)
+    return True
 
 
 def main():
     user_input = input(INPUT_TEXT)
-
-    if check_user_input(user_input, 3):
-        answer_array = solve(*string_to_float(user_input))
-        print(*answer_array, sep=" ")
-    else:
-        raise ValueError(BAD_INPUT)
+    try:
+        if check_user_input(user_input, 3):
+            answer_array = solve(*string_to_float(user_input))
+            print(*answer_array, sep=" ")
+    except Exception as error:
+        print(error)
 
 
 if __name__ == "__main__":
-    try:
-        main()
-    except Exception as error:
-        print(error)
+    main()

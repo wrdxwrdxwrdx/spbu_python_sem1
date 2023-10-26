@@ -24,7 +24,7 @@ def test_linear_solver(b, k, expected):
 
 @pytest.mark.parametrize("num,expected", [("2", True), ("2.3", True), ("a", False)])
 def test_is_float_number(num, expected):
-    assert is_float_number(num) is expected
+    assert is_float_number(num) == expected
 
 
 @pytest.mark.parametrize(
@@ -52,7 +52,7 @@ def test_string_to_float(line, expected):
 
 
 @pytest.mark.parametrize(
-    "line,number_of_elements,expected", [("1 2 3", 3, True), ("1 2 3 3", 3, False)]
+    "line,number_of_elements,expected", [("1 2 3", 3, True), ("1 2 4", 3, True)]
 )
 def test_check_user_input(line, number_of_elements, expected):
     assert check_user_input(line, number_of_elements) == expected
@@ -72,13 +72,6 @@ def test_main_scenario(monkeypatch, user_input, expected):
     )
 
 
-@pytest.mark.parametrize("user_input", [("2 -14"), ("4 -20 25 12")])
-def test_error_main_scenario(monkeypatch, user_input):
-    with pytest.raises(ValueError):
-        monkeypatch.setattr("builtins.input", lambda _: user_input)
-        main()
-
-
 @pytest.mark.parametrize("a,b,c", [(1, 2, 3), (1, 2, 5), (10, 23, 100)])
 def test_error_quadratic_solver(a, b, c):
     with pytest.raises(ValueError):
@@ -95,6 +88,12 @@ def test_error_solve(a, b, c):
 def test_error_string_to_float(line):
     with pytest.raises(ValueError):
         string_to_float(line)
+
+
+@pytest.mark.parametrize("line,k", [("1 2 3 4", 3), ("1 2", 3)])
+def test_error_check_user_input(line, k):
+    with pytest.raises(ValueError):
+        check_user_input(line, k)
 
 
 @pytest.mark.parametrize("k,b", [(0, 3), (0, 2)])
