@@ -33,7 +33,7 @@ def tail(list):
 
 
 def insert(list, value, index):
-    if index > list.size:
+    if index > list.size or index < 0:
         return False
     if list.size == 0 == index:
         list.head = Node(value)
