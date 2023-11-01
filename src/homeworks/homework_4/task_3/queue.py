@@ -4,7 +4,7 @@ from dataclasses import dataclass
 @dataclass
 class Node:
     value: any
-    next: any
+    next: "Node"
 
 
 @dataclass
@@ -12,7 +12,7 @@ class Queue:
     max_size: int = 10
     size: int = 0
     head: Node = None
-    tail: Node = None
+    tail: Node | None = None
 
 
 def create_queue():
