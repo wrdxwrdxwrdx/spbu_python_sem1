@@ -1,84 +1,88 @@
-def denary_to_binary(number):
+from math import *
+
+
+def normalize_binary(number, bits):
+    return [number[0]] * (bits - len(number)) + number
+
+
+def get_size_bytes(number):
+    return ceil(len(number) / 8)
+
+
+def binary_addition(num_1, num_2):
+    extra_number = 0
     answer = []
 
+    for i in range(len(num_1) - 1, -1, -1):
+        sum_digit = extra_number + num_1[i] + num_2[i]
+
+        if sum_digit > 1:
+            extra_number = 1
+        else:
+            extra_number = 0
+        answer.insert(0, sum_digit % 2)
+
+    if len(answer) > len(num_1):
+        return normalize_binary(answer[1:], len(answer[1:]))
+    return normalize_binary(answer, len(answer))
+
+
+def denary_to_binary(number):
     is_minus = number < 0
+    answer = []
     number = abs(number)
 
-    while number > 0:
-        answer.append(number % 2)
+    while number >= 1:
+        answer.insert(0, number % 2)
         number //= 2
 
-    answer = answer[::-1]
-    answer.insert(0, 0)
+    binary_one = normalize_binary([0, 1], len(answer))
 
     if is_minus:
-        answer = list(map(lambda a: 0 if a else 1, answer))
-        answer = binary_addition(answer, [0, 1])
-    return answer
+        return [1] + binary_addition(inverse_number(answer), binary_one)
+    return [0] + answer
 
 
-def normalize_binary(a, b):
-    if len(b) < len(a):
-        b = [b[0] for i in range(len(a) - len(b) + 2)] + b[1:]
-        a = [a[0]] + a
+def binary_to_denary(number):
+    answer = 0
+    is_minus = number.pop(0)
+    if is_minus:
+        number = binary_addition(
+            inverse_number(number), normalize_binary([0, 1], len(number))
+        )[::-1]
     else:
-        a = [a[0] for i in range(len(b) - len(a) + 2)] + a[1:]
-        b = [b[0]] + b
-    return a, b
+        number = number[::-1]
+    for i in range(len(number)):
+        answer += number[i] * (2**i)
+    return (-1) ** is_minus * answer
 
 
-def binary_addition(q, w):
-    a, b = normalize_binary(q, w)
-
-    for i in range(len(a)):
-        b[i] += a[i]
-
-    for i in range(len(b) - 1, -1, -1):
-        if b[i] >= 2:
-            if i != 0:
-                b[i - 1] += b[i] // 2
-                b[i] = b[i] % 2
-            else:
-                b[i] = 0
-    return b
+def inverse_number(number):
+    return list(map(lambda x: int(not x), number))
 
 
-def binary_subtraction(a, b):
-    return binary_addition(a, invert_number(b))
+def binary_subtraction(num_1, num_2):
+    num_2 = binary_addition(inverse_number(num_2), normalize_binary([0, 1], len(num_2)))
+    bytes = max(get_size_bytes(num_1), get_size_bytes(num_2))
+    return binary_addition(
+        normalize_binary(num_1, bytes * 8), normalize_binary(num_2, bytes * 8)
+    )
 
 
 def arr_to_str(arr):
     return "".join(map(str, arr))
 
 
-def invert_number(number):
-    if number[0] == 0:
-        answer = list(map(lambda a: 0 if a else 1, number))
-        answer = binary_addition(answer, [0, 1])
-    else:
-        answer = list(map(lambda a: 0 if a else 1, number))
-        answer = binary_addition(answer, [0, 1])
-    return answer
-
-
-def binary_to_denary(number):
-    answer = 0
-    minus = number.pop(0)
-    if minus:
-        number = invert_number(number)[::-1]
-    else:
-        number = number[::-1]
-
-    for i in range(len(number)):
-        answer += number[i] * 2**i
-
-    if minus:
-        return -answer
-    return answer
-
-
-def main(num_1, num_2):
+def main():
+    num_1 = int(input("Первое число: "))
+    num_2 = int(input("Второе число: "))
     num_1_bin, num_2_bin = denary_to_binary(num_1), denary_to_binary(num_2)
+
+    bytes = max(get_size_bytes(num_1_bin), get_size_bytes(num_2_bin)) + 1
+
+    num_1_bin = normalize_binary(num_1_bin, bytes * 8)
+    num_2_bin = normalize_binary(num_2_bin, bytes * 8)
+
     print(f"{num_1} в Двоичной системе исчисления: {arr_to_str(num_1_bin)}")
     print(f"{num_2} в Двоичной системе исчисления: {arr_to_str(num_2_bin)}")
     print(
@@ -96,7 +100,4 @@ def main(num_1, num_2):
 
 
 if __name__ == "__main__":
-    num_1 = int(input("Первое число: "))
-    num_2 = int(input("Второе число: "))
-
-    main(num_1, num_2)
+    main()
