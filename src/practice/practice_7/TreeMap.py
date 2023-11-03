@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from typing import TypeVar, Generic
+from typing import TypeVar, Generic, Optional
 
 V = TypeVar("V")
 Key = TypeVar("Key")
@@ -10,13 +10,13 @@ Value = TypeVar("Value")
 class TreeNode(Generic[V]):
     key: Key
     value: V
-    left: "TreeNode[V]" = None
-    right: "TreeNode[V]" = None
+    left: Optional["TreeNode[V]"] = None
+    right: Optional["TreeNode[V]"] = None
 
 
 @dataclass
 class TreeMap(Generic[V]):
-    root: TreeNode[V] | None = None
+    root: Optional["TreeNode[V]"] = None
     size: int = 0
 
 
@@ -26,20 +26,36 @@ def create_tree_map() -> TreeMap:
 
 
 # err
-def delete_tree_map(map: TreeMap):
-    map.root = None
-    map.size = 0
+def delete_tree_map(map: TreeMap) -> None:
+    def delete_node(node: TreeNode):
+        left_node = node.left
+        right_node = node.right
+
+        if left_node is None and right_node is None:
+            del node
+
+        elif left_node is not None:
+            delete_node(node.left)
+            del node
+
+        elif right_node is not None:
+            delete_node(node.right)
+            del node
+
+    if map.root is not None:
+        map.root = delete_node(map.root)
+        map.size = 0
 
 
 # err
-def put(map: TreeMap, key: Key, value: Value):
+def put(map: TreeMap, key: Key, value: Value) -> None:
     if map.root is None:
         map.root = TreeNode(key, value)
         map.size += 1
 
     else:
 
-        def binary_search_put(map: TreeMap, node: TreeNode, key: Key):
+        def binary_search_put(map: TreeMap, node: TreeNode, key: Key) -> None:
             if node.key == key:
                 node.value = value
 
@@ -62,28 +78,23 @@ def put(map: TreeMap, key: Key, value: Value):
 
 # err
 def get(map: TreeMap, key: Key) -> Value:
+    if not has_key(map, key):
+        raise ValueError("Элемента нет в дереве")
+
     def binary_search_get(node: TreeNode, key: Key) -> Value:
         if node.key == key:
             return node.value
         elif key < node.key:
-            if node.left is None:
-                raise ValueError("Элемента нет в дереве")
-            else:
-                return binary_search_get(node.left, key)
+            return binary_search_get(node.left, key)
         else:
-            if node.right is None:
-                raise ValueError("Элемента нет в дереве")
-            else:
-                return binary_search_get(node.right, key)
+            return binary_search_get(node.right, key)
 
-    if map.root is None:
-        raise ValueError("Элемента нет в дереве")
     return binary_search_get(map.root, key)
 
 
 # err
 def has_key(map: TreeMap, key: Key) -> bool:
-    def binary_search_has_key(node: TreeNode, key: Key):
+    def binary_search_has_key(node: TreeNode, key: Key) -> bool:
         if node.key == key:
             return True
         elif key < node.key:
@@ -105,92 +116,90 @@ def has_key(map: TreeMap, key: Key) -> bool:
 
 # err
 def remove(map: TreeMap, key: Key) -> Value:
-    remove_value = get(map, key)
+    def remove_node(node: TreeNode, key: Key) -> (TreeNode, Value):
+        if key < node.key:
+            new_left_child, value = remove_node(node.left, key)
+            node.left = new_left_child
+            return node, value
+        elif node.key < key:
+            new_right_child, value = remove_node(node.right, key)
+            node.right = new_right_child
+            return node, value
 
-    def binary_search_remove(node: TreeNode, key: Key) -> TreeNode | None:
-        if node is None:
-            return None
-
-        if node.key == key:
-            if node.left is None and node.right is None:
-                return None
-            if node.left is not None and node.right is None:
-                return node.left
-            if node.left is None and node.right is not None:
-                return node.right
-
-            right_branch = node.right
-            while right_branch.left:
-                right_branch = right_branch.left
-            node.value = right_branch.value
-            node.key = right_branch.key
-            node.right = binary_search_remove(node.right, node.key)
-
-        elif node.left is None and node.right is None:
-            raise ValueError("Элемента нет в дереве")
-
-        elif node.key > key:
-            node.left = binary_search_remove(node.left, key)
+        if node.left is None and node.right is None:
+            return None, node.value
+        elif node.left is None and node.right is not None:
+            return node.right, node.value
+        elif node.left is not None and node.right is None:
+            return node.left, node.value
         else:
-            node.right = binary_search_remove(node.right, key)
-        return node
 
-    if map.root is None:
+            def find_min_node(node: TreeNode) -> TreeNode:
+                def binary_search(node: TreeNode) -> TreeNode:
+                    if node.left is None:
+                        return node
+                    else:
+                        binary_search(node.left)
+
+                return binary_search(node)
+
+            value = node.value
+
+            min_node = find_min_node(node.right)
+
+            remove_node(node, min_node.key)
+
+            node.key = min_node.key
+            node.value = min_node.value
+
+            return node, value
+
+    if not has_key(map, key):
         raise ValueError("Элемента нет в дереве")
-    else:
-        binary_search_remove(map.root, key)
-    map.size -= 1
-    return remove_value
+    if map.size == 1:
+        root = map.root
+
+        map.root = None
+        map.size -= 1
+        return root.value
+
+    map.root, value = remove_node(map.root, key)
+    return value
 
 
 # err
 def traverse(map: TreeMap, order: str) -> list[Value]:
-    def inorder(node: TreeNode) -> list[Value]:
-        if node.left and node.right:
-            return [node.value] + inorder(node.left) + inorder(node.right)
-        elif node.left:
-            return [node.value] + inorder(node.left)
-        elif node.right:
-            return [node.value] + inorder(node.right)
-        else:
-            return [node.value]
+    def postorder_comparator(node: TreeNode[V]) -> filter:
+        return filter(None, (node.left, node.right, node))
 
-    def postorder(node: TreeNode, array: list = []) -> list[Value]:
-        if node.left:
-            postorder(node.left, array)
-        array.append(node.value)
-        if node.right:
-            postorder(node.right, array)
+    def inorder_comparator(node: TreeNode[V]) -> filter:
+        return filter(None, (node.left, node, node.right))
 
-        return array
+    def preorder_comparator(node: TreeNode[V]) -> filter:
+        return filter(None, (node, node.left, node.right))
 
-    def preorder(node: TreeNode) -> list[Value]:
-        def direct_order_right(node: TreeNode):
-            if node.left and node.right:
-                return (
-                    [node.value]
-                    + direct_order_right(node.right)
-                    + direct_order_right(node.left)
-                )
-            if node.right:
-                return [node.value] + direct_order_right(node.right)
-            elif node.left:
-                return [node.value] + direct_order_right(node.left)
+    if map.size == 0:
+        return []
+
+    order_list = []
+
+    def create_order(node: TreeNode, func) -> None:
+        node_order = func(node)
+
+        for i in node_order:
+            if i != node:
+                create_order(i, func)
             else:
-                return [node.value]
-
-        return direct_order_right(node)[::-1]
+                order_list.append(i.value)
 
     order = order.lower()
 
-    if map.root is None and order in ("inorder", "postorder", "preorder"):
-        return []
-
-    if order == "inorder":
-        return inorder(map.root)
-    if order == "postorder":
-        return postorder(map.root)
     if order == "preorder":
-        return preorder(map.root)
+        create_order(map.root, preorder_comparator)
+    elif order == "inorder":
+        create_order(map.root, inorder_comparator)
+    elif order == "postorder":
+        create_order(map.root, postorder_comparator)
     else:
-        raise ValueError("Указан неверный порядок")
+        raise ValueError("Введен неверный порядок")
+    return order_list

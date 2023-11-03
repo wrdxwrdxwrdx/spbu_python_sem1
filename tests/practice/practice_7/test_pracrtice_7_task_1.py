@@ -30,10 +30,10 @@ def test_delete_tree_map(elements):
 @pytest.mark.parametrize(
     "elements,order,expected",
     [
-        (((8, 8), (3, 3), (1, 1), (6, 6)), "inorder", [8, 3, 1, 6]),
-        (((8, 8), (3, 3), (1, 1), (6, 6)), "Inorder", [8, 3, 1, 6]),
-        (((8, 8), (3, 3), (1, 1), (6, 6)), "postorder", [1, 3, 6, 8]),
-        (((8, 8), (3, 3), (1, 1), (6, 6)), "preorder", [1, 6, 3, 8]),
+        (((8, 8), (3, 3), (1, 1), (6, 6)), "inorder", [1, 3, 6, 8]),
+        (((8, 8), (3, 3), (1, 1), (6, 6)), "Inorder", [1, 3, 6, 8]),
+        (((8, 8), (3, 3), (1, 1), (6, 6)), "postorder", [1, 6, 3, 8]),
+        (((8, 8), (3, 3), (1, 1), (6, 6)), "preorder", [8, 3, 1, 6]),
         ((), "postorder", []),
     ],
 )
@@ -45,8 +45,8 @@ def test_traverse(elements, order, expected):
 @pytest.mark.parametrize(
     "elements,put_element,expected",
     [
-        (((8, 8), (3, 3), (1, 1), (6, 6)), (1, 12), [8, 3, 12, 6]),
-        (((8, 8), (3, 3), (1, 1), (6, 6)), (10, 10), [8, 3, 1, 6, 10]),
+        (((8, 8), (3, 3), (1, 1), (6, 6)), (1, 12), [12, 3, 6, 8]),
+        (((8, 8), (3, 3), (1, 1), (6, 6)), (10, 10), [1, 3, 6, 8, 10]),
         ((), (1, 1), [1]),
     ],
 )
@@ -83,7 +83,7 @@ def test_has_element(elements, key, expected):
 @pytest.mark.parametrize(
     "elements,key,expected_value,expected_order",
     [
-        (((8, 8), (3, 3), (1, 1), (6, 6)), 1, 1, [8, 3, 6]),
+        (((8, 8), (3, 3), (1, 1), (6, 6)), 1, 1, [3, 6, 8]),
         (
             (
                 (8, 8),
@@ -98,7 +98,7 @@ def test_has_element(elements, key, expected):
             ),
             6,
             6,
-            [8, 3, 1, 7, 4, 10, 14, 13],
+            [1, 3, 4, 7, 8, 10, 13, 14],
         ),
     ],
 )
@@ -137,8 +137,8 @@ def test_error_remove(elements, key):
 @pytest.mark.parametrize(
     "elements,order",
     [
-        ((()), "order"),
         (((8, 8), (3, 3), (1, 1), (6, 6)), "postorderrr"),
+        (((8, 8), (3, 3), (1, 1), (6, 6)), "order"),
     ],
 )
 def test_error_traverse(elements, order):
