@@ -8,7 +8,7 @@ def get_unicode(char: str) -> str:
 
 def get_unicode_binary(char: str) -> str:
     binary_unicode = bin(ord(char))[2:]
-    answer = "0" * (16 - len(binary_unicode)) + binary_unicode
+    answer = binary_unicode.rjust(16, "0")
     return answer[:8] + " " + answer[8:]
 
 
@@ -18,7 +18,7 @@ def main():
     for char in user_input:
         unicode = get_unicode(char)
         unicode_binary = get_unicode_binary(char)
-        print("{}	{}	 {}".format(char, unicode, unicode_binary))
+        print("{}   {}  {}".format(char, unicode, unicode_binary))
 
 
 if __name__ == "__main__":
