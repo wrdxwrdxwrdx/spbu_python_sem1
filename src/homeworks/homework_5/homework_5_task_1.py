@@ -8,8 +8,8 @@ def get_unicode(char: str) -> str:
 
 def get_unicode_binary(char: str) -> str:
     binary_unicode = bin(ord(char))[2:]
-    answer = binary_unicode.rjust(16, "0")
-    return answer[:8] + " " + answer[8:]
+    answer = binary_unicode.rjust(32, "0")
+    return " ".join([answer[i : i + 8] for i in range(0, 32, 8)])
 
 
 def main():
