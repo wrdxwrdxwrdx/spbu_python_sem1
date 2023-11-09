@@ -68,7 +68,7 @@ def test_get_load_factor(elements, expected):
                 ("may 13", 13),
                 ("may 14", 14),
             ),
-            128,
+            64,
         ),
     ],
 )

@@ -33,7 +33,7 @@ def resize(hash_table: HashTable) -> None:
 
     hash_table.values = [[] for _ in range(new_capacity)]
     hash_table.capacity = new_capacity
-
+    hash_table.keys_number = 0
     for hash in range(capacity):
         for key_value in values[hash]:
             if key_value:
@@ -59,11 +59,11 @@ def put(hash_table: HashTable, key: Key, value: Value) -> None:
                 break
         else:
             hash_table.values[hash].append((key, value))
+        hash_table.keys_number += 1
+
     else:
         resize(hash_table)
         put(hash_table, key, value)
-
-    hash_table.keys_number += 1
 
 
 def remove(hash_table: HashTable, key: Key) -> Value:
