@@ -15,10 +15,7 @@ class HashTable(Generic[Value]):
 
 
 def hash_function(key: Key, capacity: int) -> int:
-    output = 0
-    for char in str(key):
-        output += ord(char)
-    return output % capacity
+    return hash(key) % capacity
 
 
 def get_load_factor(hash_table: HashTable) -> float:

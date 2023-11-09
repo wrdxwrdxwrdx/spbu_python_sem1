@@ -16,19 +16,6 @@ def test_create_hash_table():
 
 
 @pytest.mark.parametrize(
-    "elements,key,expected",
-    [
-        ((("may 1", 1), ("may 2", 2), ("may 3", 3), ("may 4", 4)), "may 5", 12),
-        ((("may 1", 1), ("may 2", 2), ("may 3", 3), ("may 4", 4)), "may 6", 13),
-        ((("may 1", 1), ("may 2", 2), ("may 3", 3), ("may 4", 4)), "may 12", 10),
-    ],
-)
-def test_hash_function(elements, key, expected):
-    hash_table = dummy_hash_table(elements)
-    assert hash_function(key, hash_table.capacity) == expected
-
-
-@pytest.mark.parametrize(
     "elements,expected",
     [
         ((("may 1", 1), ("may 2", 2), ("may 3", 3), ("may 4", 4)), 4 / 16),
