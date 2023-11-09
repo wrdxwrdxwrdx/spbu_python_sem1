@@ -1,65 +1,80 @@
-def denary_to_binary(number, accuracy=10):
+def denary_to_binary(number):
     is_minus = number < 0
+
     number = abs(number)
     decimal_part = number % 1
     whole_part = int(number)
-    res = []
-    while whole_part:
-        res.append(whole_part % 2)
-        whole_part //= 2
-    res = res[::-1]
-    res.append(".")
+    output = []
 
+    while whole_part:
+        output.append(whole_part % 2)
+        whole_part //= 2
+
+    output = output[::-1]
+    output.append(".")
     if decimal_part != 0:
-        for i in range(accuracy - len(res)):
+        while decimal_part != 0:
             decimal_part *= 2
-            res.append(int(decimal_part))
+            output.append(int(decimal_part))
             if int(decimal_part):
                 decimal_part = decimal_part % 1
 
     if is_minus:
-        return "-" + "".join(map(str, res))
-    return "+" + "".join(map(str, res))
+        return "-" + "".join(map(str, output))
+    return "+" + "".join(map(str, output))
 
 
 def count_shifted_order(q, k):
     return q + 2 ** (k - 1) - 1
 
 
-def double_number(number, mantissa_bit, exponent_bit):
-    bin_number = denary_to_binary(number, mantissa_bit + 2)
-    q = bin_number.index(".") - 2
+def floating_point_number(number, mantissa_bit, exponent_bit):
+    bin_number = denary_to_binary(number)
+
+    if bin_number[1] == ".":
+        q = 1 - bin_number.find("1")
+        bin_number = bin_number.replace(".", "")
+        mantissa = bin_number[bin_number.index("1") + 1 :].ljust(mantissa_bit, "0")
+
+    else:
+        q = bin_number.find(".") - 2
+        bin_number = bin_number.replace(".", "")
+        mantissa = bin_number[2:].ljust(mantissa_bit, "0")
+
     exponent = denary_to_binary(count_shifted_order(q, exponent_bit))[1:-1]
+
     sign = int(bin_number[0] == "-")
-    mantissa = (
-        bin_number[2 : bin_number.index(".")] + bin_number[bin_number.index(".") + 1 :]
-    )
 
     return f"{sign} {exponent} {mantissa}"
 
 
-def denary_exponent(number):
-    p = 10
-    q = 0
-    while abs(number) >= 1:
-        q += 1
-        number /= 10
-    return f"{number} * {p}^{q}"
-
-
-def main(choice, number):
-    print(f"экспоненциальная запись числа: {denary_exponent(number)}")
-    if choice == 1:
-        print((f"число в FP64: {double_number(number, 52, 11)}"))
-    elif choice == 2:
-        print(f"число в FP32: {double_number(number, 23, 8)}")
+def binary_exponent(number):
+    if number[1] == ".":
+        q = 2 - number.find("1")
+        mantissa = number[0] + "0." + number[number.find("1") :]
     else:
-        print(f"число в FP16: {double_number(number, 10, 5)}")
+        q = number.find(".") - 1
+        number = number.replace(".", "")
+        mantissa = number[0] + "0." + number[1:]
+
+    return f"{mantissa[:27]} * {2}^{q}"
+
+
+def main():
+    number = float(input("число: "))
+
+    print(f"экспоненциальная запись числа: {binary_exponent(denary_to_binary(number))}")
+    print("Выберите формат записи числа")
+
+    choice = int(input("1) FP64\n" "2) FP32\n" "3) FP16\n"))
+
+    if choice == 1:
+        print((f"число в FP64: {floating_point_number(number, 52, 11)}"))
+    elif choice == 2:
+        print(f"число в FP32: {floating_point_number(number, 23, 8)}")
+    else:
+        print(f"число в FP16: {floating_point_number(number, 10, 5)}")
 
 
 if __name__ == "__main__":
-    number = float(input("число: "))
-    print("Выберите формат записи числа")
-    choice = int(input("1) FP64\n" "2) FP32\n" "3) FP16\n"))
-
-    main(choice, number)
+    main()
