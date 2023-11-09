@@ -1,8 +1,6 @@
-def denary_to_binary(number):
-    is_minus = number < 0
-
+def whole_part_binary(number):
     number = abs(number)
-    decimal_part = number % 1
+
     whole_part = int(number)
     output = []
 
@@ -12,12 +10,29 @@ def denary_to_binary(number):
 
     output = output[::-1]
     output.append(".")
+
+    return output
+
+
+def decimal_part_binary(number):
+    output = []
+
+    decimal_part = number % 1
+
     if decimal_part != 0:
         while decimal_part != 0:
             decimal_part *= 2
             output.append(int(decimal_part))
             if int(decimal_part):
                 decimal_part = decimal_part % 1
+
+    return output
+
+
+def denary_to_binary(number):
+    is_minus = number < 0
+
+    output = whole_part_binary(number) + decimal_part_binary(number)
 
     if is_minus:
         return "-" + "".join(map(str, output))
@@ -34,13 +49,14 @@ def floating_point_number(number, mantissa_bit, exponent_bit):
     if bin_number[1] == ".":
         q = 1 - bin_number.find("1")
         bin_number = bin_number.replace(".", "")
-        mantissa = bin_number[bin_number.index("1") + 1 :].ljust(mantissa_bit, "0")
+        mantissa = bin_number[bin_number.index("1") + 1 :]
 
     else:
         q = bin_number.find(".") - 2
         bin_number = bin_number.replace(".", "")
-        mantissa = bin_number[2:].ljust(mantissa_bit, "0")
+        mantissa = bin_number[2:]
 
+    mantissa = mantissa.ljust(mantissa_bit, "0")
     exponent = denary_to_binary(count_shifted_order(q, exponent_bit))[1:-1]
 
     sign = int(bin_number[0] == "-")
