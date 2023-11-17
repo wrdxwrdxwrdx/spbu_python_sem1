@@ -59,11 +59,15 @@ def popBack(deque: Deque) -> Value:
     return value
 
 
+def push_empty(deque: Deque, value: Value) -> None:
+    new_node = Node(value)
+    deque.head = new_node
+    deque.tail = new_node
+
+
 def pushFront(deque: Deque, value: Value) -> None:
     if is_empty(deque):
-        new_node = Node(value)
-        deque.head = new_node
-        deque.tail = new_node
+        push_empty(deque, value)
     else:
         front_node = deque.head
         new_node = Node(value, None, front_node)
@@ -74,9 +78,7 @@ def pushFront(deque: Deque, value: Value) -> None:
 
 def pushBack(deque: Deque, value: Value) -> None:
     if is_empty(deque):
-        new_node = Node(value)
-        deque.head = new_node
-        deque.tail = new_node
+        push_empty(deque, value)
     else:
         back_node = deque.tail
         new_node = Node(value, back_node, None)
