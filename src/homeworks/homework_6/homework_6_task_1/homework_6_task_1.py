@@ -1,4 +1,4 @@
-from AVL_Tree import *
+from src.homeworks.homework_6.AVL_Tree import *
 
 OUTPUT_FILE = "output_logs.txt"
 STORAGE_FILE = "shop_logs.txt"

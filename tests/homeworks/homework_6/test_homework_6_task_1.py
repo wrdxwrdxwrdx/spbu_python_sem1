@@ -1,4 +1,4 @@
-from src.homeworks.homework_6.homework_6_task_1.AVL_Tree import *
+from src.homeworks.homework_6.AVL_Tree import *
 import pytest
 
 
