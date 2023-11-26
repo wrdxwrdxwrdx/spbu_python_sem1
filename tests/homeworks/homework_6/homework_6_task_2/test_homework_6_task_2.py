@@ -18,10 +18,18 @@ def dummy_storage(elements: tuple) -> TreeMap:
 
 def test_static_mode():
     storage = create_tree_map()
-    static_mode(storage, "streets_logs.txt", "streets_results.txt")
+    static_mode(
+        storage,
+        "tests/homeworks/homework_6/homework_6_task_2/streets_logs.txt",
+        "tests/homeworks/homework_6/homework_6_task_2/streets_results.txt",
+    )
     is_output = True
-    with open("streets_results.txt", "r") as result:
-        with open("streets_answer.txt", "r") as answer:
+    with open(
+        "tests/homeworks/homework_6/homework_6_task_2/streets_results.txt", "r"
+    ) as result:
+        with open(
+            "tests/homeworks/homework_6/homework_6_task_2/streets_answer.txt", "r"
+        ) as answer:
             result_lines = result.readlines()
             answer_lines = answer.readlines()
             for i in range(len(result_lines)):
