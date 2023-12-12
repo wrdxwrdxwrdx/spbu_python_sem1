@@ -2,8 +2,9 @@ from src.practice.practice_9.fsm_module import *
 from string import digits
 
 
-def main():
-    functions_ab = [lambda x: x == "a", lambda x: x == "b"]
+def create_fsm_ab() -> FSMachine:
+    name_ab = "(a|b)*abb"
+    rules_ab = ["a", "b"]
     table_ab = {
         0: (1, 0),
         1: (1, 2),
@@ -13,12 +14,15 @@ def main():
     start_state_ab = 0
     quit_states_ab = [3]
 
-    functions_number = [
-        lambda x: x in digits,
-        lambda x: x == ".",
-        lambda x: x == "E",
-        lambda x: x == "-" or x == "+",
-    ]
+    fsm_ab = create_fs_machine(
+        name_ab, table_ab, rules_ab, start_state_ab, quit_states_ab
+    )
+    return fsm_ab
+
+
+def create_fsm_number() -> FSMachine:
+    name_number = "digit+(.digit+)?(E(+|-)?digit+)?"
+    rules_number = [digits, ".", "E", "-+"]
     table_number = {
         0: (2, 3, None, 1),
         1: (2, 3, None, None),
@@ -32,16 +36,20 @@ def main():
     start_state_number = 0
     quit_states_number = [2, 4, 7]
 
-    fsm_ab = create_fs_machine(table_ab, functions_ab, start_state_ab, quit_states_ab)
     fsm_number = create_fs_machine(
-        table_number, functions_number, start_state_number, quit_states_number
+        name_number, table_number, rules_number, start_state_number, quit_states_number
     )
+    return fsm_number
+
+
+def main():
+    fsm_array = [create_fsm_ab(), create_fsm_number()]
 
     user_word = input("Enter word: ")
-    if validate_string(fsm_ab, user_word):
-        print(f"{user_word} is (a|b)*abb language")
-    elif validate_string(fsm_number, user_word):
-        print(f"{user_word} is digit+(.digit+)?(E(+|-)?digit+)? language")
+    for fsm in fsm_array:
+        if validate_string(fsm, user_word):
+            print(f"{user_word} is {fsm.name} language")
+            break
     else:
         print(f"{user_word} is not any language")
 
