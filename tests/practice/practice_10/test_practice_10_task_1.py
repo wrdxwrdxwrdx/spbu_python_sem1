@@ -7,12 +7,12 @@ import pytest
 @pytest.mark.parametrize(
     "file_name",
     [
-        ("test_files/test_1.txt"),
-        ("test_files/test_2.txt"),
-        ("test_files/test_3.txt"),
-        ("test_files/test_4.txt"),
-        ("test_files/test_5.txt"),
-        ("test_files/test_6.txt"),
+        ("tests/practice/practice_10/test_files/test_1.txt"),
+        ("tests/practice/practice_10/test_files/test_2.txt"),
+        ("tests/practice/practice_10/test_files/test_3.txt"),
+        ("tests/practice/practice_10/test_files/test_4.txt"),
+        ("tests/practice/practice_10/test_files/test_5.txt"),
+        ("tests/practice/practice_10/test_files/test_6.txt"),
     ],
 )
 def test_main_scenario(monkeypatch, file_name):
