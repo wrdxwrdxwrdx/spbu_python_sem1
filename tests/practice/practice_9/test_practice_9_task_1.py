@@ -5,24 +5,22 @@ from src.practice.practice_9.fsm_module import *
 
 
 @pytest.mark.parametrize(
-    "name,table,rules,start_state,quit_states",
+    "name,table,start_state,quit_states",
     [
-        ("aabb", {0: (1, 0), 1: (1, 2)}, ["a", "b"], 0, [3]),
+        ("aabb", ({"a": 1}, {"b": 0}), 0, [3]),
         (
             "number",
-            {0: (2, 3, None), 1: (2, 3, None)},
-            [digits, ".", "E", "-+"],
+            ({"a": 1}, {"b": 0}),
             0,
             [2, 4, 7],
         ),
     ],
 )
-def test_create_fs_machine(name, table, rules, start_state, quit_states):
-    fsm = create_fs_machine(name, table, rules, start_state, quit_states)
+def test_create_fs_machine(name, table, start_state, quit_states):
+    fsm = create_fs_machine(name, table, start_state, quit_states)
     assert (
         fsm.name == name,
         fsm.table == table,
-        fsm.rules == rules,
         fsm.start_state == start_state,
         fsm.quit_states == quit_states,
     )
