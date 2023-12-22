@@ -1,3 +1,4 @@
+import sys
 from typing import Callable
 from functools import wraps
 import warnings
@@ -7,12 +8,11 @@ import traceback
 def get_error_info(error: Exception) -> str:
     error_type = type(error).__name__
 
-    traceback_text = traceback.format_exc().strip().split("\n")
-    error_info = traceback_text[-3].split()
-
-    line_number = (error_info[-3])[:-1]
-    function_name = error_info[-1]
-    code_line = traceback_text[-2].strip()
+    exception_info = sys.exc_info()[2]
+    exception_info_parsed = traceback.extract_tb(exception_info)[-1]
+    function_name = exception_info_parsed.name
+    line_number = exception_info_parsed.lineno
+    code_line = exception_info_parsed.line
 
     warning_output = (
         f"{error_type} in line {line_number}\n"
