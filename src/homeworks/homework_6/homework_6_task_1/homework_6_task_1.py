@@ -1,8 +1,5 @@
 from src.homeworks.homework_6.AVL_Tree import *
 
-OUTPUT_FILE = "output_logs.txt"
-STORAGE_FILE = "shop_logs.txt"
-
 
 def add_to_storage(storage: TreeMap, size: int, count: int) -> int:
     """Add to the storage "COUNT" instances of clothing size "SIZE" """
@@ -60,20 +57,19 @@ def detect_command(storage: TreeMap, command: str) -> str:
     return write_line
 
 
-def write_file(storage: TreeMap, storage_name: str, output_name: str) -> None:
-    with open(output_name, "w") as output_file:
-        with open(storage_name, "r") as storage_file:
-            command_number = int(storage_file.readline())
-            for i in range(command_number):
-                command = storage_file.readline()
-                line = detect_command(storage, command.strip())
-                if line:
-                    output_file.write(line + "\n")
+def create_log_file(storage: TreeMap, storage_name: str, output_name: str) -> None:
+    with open(output_name, "w") as output_file, open(storage_name, "r") as storage_file:
+        command_number = int(storage_file.readline())
+        for i in range(command_number):
+            command = storage_file.readline()
+            line = detect_command(storage, command.strip())
+            if line:
+                output_file.write(line + "\n")
 
 
 def main():
     storage = create_tree_map()
-    write_file(storage, STORAGE_FILE, OUTPUT_FILE)
+    create_log_file(storage, "shop_logs.txt", "output_logs.txt")
 
 
 if __name__ == "__main__":
