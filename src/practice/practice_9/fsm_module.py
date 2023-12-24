@@ -6,11 +6,11 @@ class FSMachine:
     name: str
     table: tuple[dict[str, int]]
     start_state: int
-    quit_states: list
+    terminal_states: list
 
 
 def create_fs_machine(
-    name: str, table: tuple[dict[str, int]], start_state: int, quit_states: list
+    name: str, table: tuple[dict[str, int]], start_state: int, terminal_states: list
 ) -> FSMachine:
     """create fsm with table, start_state, quit_states and functions\n
     table:\n
@@ -21,7 +21,7 @@ def create_fs_machine(
     ]
     """
 
-    fsm = FSMachine(name, table, start_state, quit_states)
+    fsm = FSMachine(name, table, start_state, terminal_states)
 
     return fsm
 
@@ -34,9 +34,7 @@ def validate_string(fsm: FSMachine, string: str) -> bool:
         for rule in state_rules.keys():
             if token in rule:
                 current_state = state_rules[rule]
-                if current_state is None:
-                    return False
                 break
         else:
             return False
-    return current_state in fsm.quit_states
+    return current_state in fsm.terminal_states

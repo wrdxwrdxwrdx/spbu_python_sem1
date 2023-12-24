@@ -5,7 +5,7 @@ from src.practice.practice_9.fsm_module import *
 
 
 @pytest.mark.parametrize(
-    "name,table,start_state,quit_states",
+    "name,table,start_state,terminal_states",
     [
         ("aabb", ({"a": 1}, {"b": 0}), 0, [3]),
         (
@@ -16,13 +16,13 @@ from src.practice.practice_9.fsm_module import *
         ),
     ],
 )
-def test_create_fs_machine(name, table, start_state, quit_states):
-    fsm = create_fs_machine(name, table, start_state, quit_states)
+def test_create_fs_machine(name, table, start_state, terminal_states):
+    fsm = create_fs_machine(name, table, start_state, terminal_states)
     assert (
         fsm.name == name,
         fsm.table == table,
         fsm.start_state == start_state,
-        fsm.quit_states == quit_states,
+        fsm.terminal_states == terminal_states,
     )
 
 
