@@ -12,11 +12,11 @@ class FSMachine:
 def create_fs_machine(
     name: str, table: tuple[dict[str, int]], start_state: int, terminal_states: list
 ) -> FSMachine:
-    """create fsm with table, start_state, quit_states and functions\n
+    """create fsm with table, start_state, terminal_states and functions\n
     table:\n
     [\n
-    {"a" : (None, 1, 2, ...), "bc" : (None, 2, 3, ...), },\n
-    {"d" : (5, 1, None, ...), "123" : (2, 4, 3, ...), },\n
+    {digits: 1, ".": 3, "-+": 1},\n
+    {digits: 2, ".": 3},\n
     ...\n
     ]
     """
