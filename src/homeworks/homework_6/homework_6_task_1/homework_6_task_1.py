@@ -1,3 +1,5 @@
+import argparse
+import os
 from src.homeworks.homework_6.AVL_Tree import *
 
 
@@ -69,7 +71,14 @@ def create_log_file(storage: TreeMap, storage_name: str, output_name: str) -> No
 
 def main():
     storage = create_tree_map()
-    create_log_file(storage, "shop_logs.txt", "output_logs.txt")
+    parser = argparse.ArgumentParser()
+
+    file_path = os.path.dirname(__file__)
+    parser.add_argument("-s", "--storage", default=f"{file_path}/shop_logs.txt")
+    parser.add_argument("-o", "--output", default=f"{file_path}/output_logs.txt")
+    args = parser.parse_args()
+
+    create_log_file(storage, args.storage, args.output)
 
 
 if __name__ == "__main__":

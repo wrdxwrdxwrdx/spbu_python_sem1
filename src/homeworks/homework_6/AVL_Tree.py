@@ -83,13 +83,13 @@ def balance_node(root: TreeNode) -> TreeNode:
     return root
 
 
-def search_key(root: TreeNode, key: Key) -> Optional[Value]:
-    """Search for key in AVl_tree and return value"""
+def search_key(root: TreeNode, key: Key) -> Optional[TreeNode]:
+    """Search for key in AVl_tree and return Node"""
     if root is None:
-        return False
+        return None
 
     if key == root.key:
-        return root.value
+        return root
     elif key < root.key:
         return search_key(root.left, key)
     else:
@@ -104,6 +104,13 @@ def find_min_node(root: TreeNode) -> TreeNode:
     return root_copy
 
 
+def find_max_node(root: TreeNode) -> TreeNode:
+    root_copy = root
+    while root_copy.right:
+        root_copy = root_copy.right
+    return root_copy
+
+
 # MAIN FUNCTIONS
 
 
@@ -115,9 +122,9 @@ def create_tree_map() -> TreeMap:
 def get(tree_map: TreeMap, key: Key) -> Value:
     """Return value of key in AVL_tree"""
 
-    value = search_key(tree_map.root, key)
-    if value:
-        return value
+    root = search_key(tree_map.root, key)
+    if root:
+        return root.value
     else:
         raise ValueError(f"there is no key {key} in the tree")
 
@@ -125,7 +132,7 @@ def get(tree_map: TreeMap, key: Key) -> Value:
 def has_key(tree_map: TreeMap, key: Key) -> bool:
     """Return is there a key in the tree"""
 
-    return bool(search_key(tree_map.root, key))
+    return search_key(tree_map.root, key) is not None
 
 
 def get_minimum(tree_map: TreeMap) -> Key:
@@ -142,10 +149,8 @@ def get_maximum(tree_map: TreeMap) -> Key:
     if tree_map.root is None:
         raise ValueError("Tree is empty")
 
-    root_copy = tree_map.root
-    while root_copy.right:
-        root_copy = root_copy.right
-    return root_copy.key
+    max_node = find_max_node(tree_map.root)
+    return max_node.key
 
 
 def get_upper_bound(tree_map: TreeMap, key: Key) -> Key:
@@ -194,10 +199,10 @@ def get_lower_bound(tree_map: TreeMap, key: Key) -> Key:
     return search_key(tree_map.root, max_key)
 
 
-def put(tree_map: TreeMap, key: Key, value: Value) -> None:
+def put(tree_map: TreeMap, key: Key, value: Value, to_balance=True) -> None:
     """Put key_value in AVL_tree"""
 
-    def insert(root: TreeNode, key: Key, value: Value) -> TreeNode:
+    def insert(root: TreeNode, key: Key, value: Value, to_balance) -> TreeNode:
         """Find place for key and balance AVL_tree"""
 
         if root is None:
@@ -208,15 +213,19 @@ def put(tree_map: TreeMap, key: Key, value: Value) -> None:
             return root
 
         if key < root.key:
-            root.left = insert(root.left, key, value)
+            root.left = insert(root.left, key, value, to_balance)
         else:
-            root.right = insert(root.right, key, value)
+            root.right = insert(root.right, key, value, to_balance)
+        if to_balance:
+            return balance_node(root)
+        return root
 
-        return balance_node(root)
-
-    if not has_key(tree_map, key):
+    root = search_key(tree_map.root, key)
+    if root is None:
         tree_map.size += 1
-    tree_map.root = insert(tree_map.root, key, value)
+        tree_map.root = insert(tree_map.root, key, value, to_balance)
+    else:
+        root.value = value
 
 
 def remove(tree_map: TreeMap, key: Key) -> Value:

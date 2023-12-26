@@ -4,113 +4,80 @@ from src.homeworks.homework_6.AVL_Tree import *
 import pytest
 
 
-def dummy_avl_tree(elements: tuple) -> TreeMap:
+def traverse(tree_map: TreeMap) -> list[(Key, Value)]:
+    def traverse_node(root: TreeNode) -> list[(Key, Value)]:
+        if root is None:
+            return []
+        key_arr = [(root.key, root.value)]
+        key_arr += traverse_node(root.left) + traverse_node(root.right)
+        return key_arr
+
+    return traverse_node(tree_map.root)
+
+
+def dummy_avl_tree(elements: tuple, to_balance=True) -> TreeMap:
     avl_tree = create_tree_map()
     for key_value in elements:
-        put(avl_tree, *key_value)
+        put(avl_tree, *key_value, to_balance)
     return avl_tree
 
 
-def tree_put(tree_map: TreeMap, key: Key, value: Value):
-    def insert(root: TreeNode, key: Key, value: Value) -> TreeNode:
-        """Find place for key and balance AVL_tree"""
-
-        if root is None:
-            return TreeNode(key, value)
-
-        if key == root.key:
-            root.value = value
-            return root
-
-        if key < root.key:
-            root.left = insert(root.left, key, value)
-        else:
-            root.right = insert(root.right, key, value)
-        return root
-
-    if not has_key(tree_map, key):
-        tree_map.size += 1
-    tree_map.root = insert(tree_map.root, key, value)
-
-
 @pytest.mark.parametrize(
-    "elements",
+    "elements,expected_elements",
     [
         (
-            (0, 0),
-            (-5, -5),
-            (5, 5),
-            (10, 10),
-            (15, 15),
-            (7, 7),
-            (2, 2),
+            ((0, 0), (-5, -5), (5, 5), (10, 10), (15, 15), (7, 7), (2, 2)),
+            ((5, 5), (0, 0), (10, 10), (-5, -5), (2, 2), (7, 7), (15, 15)),
         ),
         (
-            (5, 5),
-            (0, 0),
-            (13, 13),
-            (10, 10),
-            (15, 15),
-            (25, 25),
-            (7, 7),
+            ((5, 5), (0, 0), (13, 13), (10, 10), (15, 15), (25, 25), (7, 7)),
+            ((13, 13), (5, 5), (15, 15), (0, 0), (10, 10), (25, 25), (7, 7)),
         ),
     ],
 )
-def test_left_rotate(elements):
-    avl_tree = create_tree_map()
-    for key_value in elements:
-        tree_put(avl_tree, *key_value)
+def test_left_rotate(elements, expected_elements):
+    avl_tree = dummy_avl_tree(elements, to_balance=False)
+    expected_avl_tree = dummy_avl_tree(expected_elements, to_balance=False)
     avl_tree.root = left_rotate(avl_tree.root)
-    assert abs(get_balance_factor(avl_tree.root)) < 2
+
+    assert traverse(avl_tree) == traverse(expected_avl_tree)
 
 
 @pytest.mark.parametrize(
-    "elements",
+    "elements,expected_elements",
     [
         (
-            (0, 0),
-            (-5, -5),
-            (5, 5),
-            (-10, -10),
-            (-15, -15),
-            (-7, -7),
-            (-2, -2),
+            ((0, 0), (-5, -5), (5, 5), (-10, -10), (-15, -15), (-7, -7), (-2, -2)),
+            ((-5, -5), (-10, -10), (0, 0), (-15, -15), (-7, -7), (-2, -2), (5, 5)),
         ),
         (
-            (-5, -5),
-            (0, 0),
-            (-13, -13),
-            (-10, -10),
-            (-15, -15),
-            (-25, -25),
-            (-7, -7),
+            (
+                (-5, -5),
+                (0, 0),
+                (-13, -13),
+                (-10, -10),
+                (-15, -15),
+                (-25, -25),
+                (-7, -7),
+            ),
+            (
+                (-13, -13),
+                (-15, -15),
+                (-5, -5),
+                (-25, -25),
+                (-10, -10),
+                (0, 0),
+                (-7, -7),
+            ),
         ),
     ],
 )
-def test_right_rotate(elements):
-    avl_tree = create_tree_map()
-    for key_value in elements:
-        tree_put(avl_tree, *key_value)
+def test_right_rotate(elements, expected_elements):
+    avl_tree = dummy_avl_tree(elements, to_balance=False)
+    expected_avl_tree = dummy_avl_tree(expected_elements, to_balance=False)
     avl_tree.root = right_rotate(avl_tree.root)
-    assert abs(get_balance_factor(avl_tree.root)) < 2
 
-
-@pytest.mark.parametrize(
-    "elements,expected",
-    [],
-)
-def test_left_right_rotate(elements, key, expected):
-    avl_tree = dummy_avl_tree(elements)
-    assert get(avl_tree, key) == expected
-
-
-@pytest.mark.parametrize(
-    "elements,expected",
-    [],
-)
-def test_right_left_rotate(elements, key, expected):
-    avl_tree = dummy_avl_tree(elements)
-    assert get(avl_tree, key) == expected
+    assert traverse(avl_tree) == traverse(expected_avl_tree)
 
 
 @pytest.mark.parametrize(
@@ -118,23 +85,11 @@ def test_right_left_rotate(elements, key, expected):
     [2, 4, 6, 9, 12, 15, 20, 50],
 )
 def test_balance_tree(size):
-    def check_tree_balance(tree_map: TreeMap) -> bool:
-        def check_node_balance(root: TreeNode):
-            if root:
-                return (
-                    abs(get_balance_factor(root)) < 2
-                    and check_node_balance(root.left)
-                    and check_node_balance(root.right)
-                )
-            return True
-
-        return check_node_balance(tree_map.root)
-
     avl_tree = create_tree_map()
     for _ in range(size):
         random_value = random.randint(1, 100)
         put(avl_tree, random_value, random_value)
-    assert check_tree_balance(avl_tree)
+        assert abs(get_balance_factor(avl_tree.root)) < 2
 
 
 @pytest.mark.parametrize(
