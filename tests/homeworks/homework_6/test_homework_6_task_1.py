@@ -85,11 +85,23 @@ def test_right_rotate(elements, expected_elements):
     [2, 4, 6, 9, 12, 15, 20, 50],
 )
 def test_balance_tree(size):
+    def check_tree_balance(tree_map: TreeMap) -> bool:
+        def check_node_balance(root: TreeNode):
+            if root:
+                return (
+                    abs(get_balance_factor(root)) < 2
+                    and check_node_balance(root.left)
+                    and check_node_balance(root.right)
+                )
+            return True
+
+        return check_node_balance(tree_map.root)
+
     avl_tree = create_tree_map()
     for _ in range(size):
         random_value = random.randint(1, 100)
         put(avl_tree, random_value, random_value)
-        assert abs(get_balance_factor(avl_tree.root)) < 2
+        assert check_tree_balance(avl_tree)
 
 
 @pytest.mark.parametrize(
